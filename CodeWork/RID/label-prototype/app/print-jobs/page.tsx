@@ -206,7 +206,6 @@ export default function PrintJobsPage() {
               paddingBottom: spacing.xs,
               border: `1px solid ${searchFocused ? (isDark ? '#007acc' : colors.focusBorder.onLight) : borderColor}`,
               borderRadius: borderRadius.md,
-              fontFamily: fontFamilies.body,
               ...typography.body.sm,
               outline: 'none',
               backgroundColor: isDark ? dark.bgInput : colors.surface.light,
@@ -227,7 +226,6 @@ export default function PrintJobsPage() {
               borderRadius: borderRadius.md,
               backgroundColor: isDark ? dark.bgInput : colors.surface.light,
               color: textHigh,
-              fontFamily: fontFamilies.body,
               ...typography.body.sm,
               outline: 'none',
             }}
@@ -245,7 +243,6 @@ export default function PrintJobsPage() {
               borderRadius: borderRadius.md,
               backgroundColor: isDark ? dark.bgInput : colors.surface.light,
               color: textHigh,
-              fontFamily: fontFamilies.body,
               ...typography.body.sm,
               outline: 'none',
             }}
@@ -265,7 +262,6 @@ export default function PrintJobsPage() {
               border: `1px solid ${borderColor}`,
               borderRadius: borderRadius.md,
               backgroundColor: isDark ? dark.bgInput : colors.surface.light,
-              fontFamily: fontFamilies.body,
               ...typography.body.sm,
               cursor: 'pointer',
               color: textHigh,
