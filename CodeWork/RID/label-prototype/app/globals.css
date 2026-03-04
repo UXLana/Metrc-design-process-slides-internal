@@ -8,78 +8,78 @@
    ============================================================================= */
 
 :root {
-  /* Legacy neutral scale */
-  --color-brand-primary: #13352C;
+  /* Legacy neutral scale (RID theme) */
+  --color-brand-primary: #213F39;
   --color-neutral-0: #FFFFFF;
-  --color-neutral-50: #FAFAFA;
-  --color-neutral-100: #F5F5F5;
-  --color-neutral-200: #EEEEEE;
-  --color-neutral-300: #E0E0E0;
-  --color-neutral-400: #BDBDBD;
-  --color-neutral-500: #9E9E9E;
-  --color-text-high-emphasis: rgba(0, 0, 0, 0.95);
+  --color-neutral-50: #F5F7F6;
+  --color-neutral-100: #EBEEED;
+  --color-neutral-200: #DFE3E2;
+  --color-neutral-300: #C5D8D4;
+  --color-neutral-400: #9EABA7;
+  --color-neutral-500: #5A6562;
+  --color-text-high-emphasis: #191C1B;
 
-  /* Themeable color tokens (Trace defaults, overridden by SwitchableThemeProvider) */
-  --mtr-brand-default: #005151;
-  --mtr-brand-darker: #003133;
-  --mtr-brand-lighter: #17978E;
-  --mtr-accent-default: #E68200;
-  --mtr-accent-darker: #AD6200;
-  --mtr-accent-lighter: #FF9E1A;
-  --mtr-surface-light: #FFFFFF;
-  --mtr-surface-lightDarker: #F5F5F5;
-  --mtr-surface-dark: #4A4A4A;
-  --mtr-surface-darkDarker: #323232;
-  --mtr-surface-disabled-onLight: rgba(0, 0, 0, 0.03);
+  /* Themeable color tokens (RID defaults, overridden by SwitchableThemeProvider) */
+  --mtr-brand-default: #213F39;
+  --mtr-brand-darker: #0D2420;
+  --mtr-brand-lighter: #3A6058;
+  --mtr-accent-default: #B87333;
+  --mtr-accent-darker: #8F5620;
+  --mtr-accent-lighter: #D49558;
+  --mtr-surface-light: #F5F7F6;
+  --mtr-surface-lightDarker: #EBEEED;
+  --mtr-surface-dark: #33423F;
+  --mtr-surface-darkDarker: #213F39;
+  --mtr-surface-disabled-onLight: rgba(33, 63, 57, 0.03);
   --mtr-surface-disabled-onDark: rgba(255, 255, 255, 0.20);
-  --mtr-surface-info: #F4F6FF;
+  --mtr-surface-info: #F0F4F8;
   --mtr-surface-success: #EDF6F4;
   --mtr-surface-warning: #FCF6ED;
   --mtr-surface-important: #FDF2F3;
-  --mtr-surfaceBorder-info: #D1D9FF;
+  --mtr-surfaceBorder-info: #C8D5E0;
   --mtr-surfaceBorder-success: #C5E2DB;
   --mtr-surfaceBorder-warning: #F2DABA;
   --mtr-surfaceBorder-important: #F8CFD3;
-  --mtr-text-highEmphasis-onLight: rgba(0, 0, 0, 0.95);
+  --mtr-text-highEmphasis-onLight: #191C1B;
   --mtr-text-highEmphasis-onDark: #FFFFFF;
-  --mtr-text-lowEmphasis-onLight: rgba(0, 0, 0, 0.60);
+  --mtr-text-lowEmphasis-onLight: #4A5552;
   --mtr-text-lowEmphasis-onDark: rgba(255, 255, 255, 0.70);
-  --mtr-text-disabled-onLight: rgba(0, 0, 0, 0.30);
+  --mtr-text-disabled-onLight: rgba(33, 63, 57, 0.30);
   --mtr-text-disabled-onDark: rgba(255, 255, 255, 0.30);
-  --mtr-text-action-enabled: #016CA2;
-  --mtr-text-action-hover: #005680;
-  --mtr-text-action-active: #00476B;
+  --mtr-text-action-enabled: #007E8A;
+  --mtr-text-action-hover: #006370;
+  --mtr-text-action-active: #004A55;
   --mtr-text-success: #006B50;
   --mtr-text-warning: #A35C00;
   --mtr-text-important: #C10B1E;
-  --mtr-border-lowEmphasis-onLight: rgba(0, 0, 0, 0.10);
+  --mtr-border-lowEmphasis-onLight: rgba(33, 63, 57, 0.10);
   --mtr-border-lowEmphasis-onDark: rgba(255, 255, 255, 0.10);
-  --mtr-border-lowEmphasis-hover-onLight: rgba(0, 0, 0, 0.27);
+  --mtr-border-lowEmphasis-hover-onLight: rgba(33, 63, 57, 0.27);
   --mtr-border-lowEmphasis-hover-onDark: rgba(255, 255, 255, 0.27);
-  --mtr-border-midEmphasis-onLight: rgba(0, 0, 0, 0.15);
+  --mtr-border-midEmphasis-onLight: rgba(33, 63, 57, 0.15);
   --mtr-border-midEmphasis-onDark: rgba(255, 255, 255, 0.15);
-  --mtr-border-highEmphasis-onLight: rgba(0, 0, 0, 0.42);
+  --mtr-border-highEmphasis-onLight: rgba(33, 63, 57, 0.42);
   --mtr-border-highEmphasis-onDark: rgba(255, 255, 255, 0.43);
-  --mtr-icon-enabled-onLight: rgba(0, 0, 0, 0.55);
+  --mtr-icon-enabled-onLight: rgba(33, 63, 57, 0.55);
   --mtr-icon-enabled-onDark: rgba(255, 255, 255, 0.94);
-  --mtr-icon-hover-onLight: rgba(0, 0, 0, 0.65);
-  --mtr-icon-active-onLight: rgba(0, 0, 0, 0.75);
-  --mtr-icon-selected-onLight: rgba(0, 0, 0, 0.85);
-  --mtr-icon-disabled-onLight: rgba(0, 0, 0, 0.20);
+  --mtr-icon-hover-onLight: rgba(33, 63, 57, 0.65);
+  --mtr-icon-active-onLight: rgba(33, 63, 57, 0.75);
+  --mtr-icon-selected-onLight: rgba(33, 63, 57, 0.85);
+  --mtr-icon-disabled-onLight: rgba(33, 63, 57, 0.20);
   --mtr-icon-disabled-onDark: rgba(255, 255, 255, 0.20);
-  --mtr-icon-lowEmphasis-enabled-onLight: rgba(0, 0, 0, 0.43);
+  --mtr-icon-lowEmphasis-enabled-onLight: rgba(33, 63, 57, 0.43);
   --mtr-icon-lowEmphasis-enabled-onDark: rgba(255, 255, 255, 0.65);
-  --mtr-iconBg-info: #EBEFFF;
-  --mtr-iconBg-info_onDark: rgba(122, 145, 255, 0.25);
+  --mtr-iconBg-info: #E0EAF0;
+  --mtr-iconBg-info_onDark: rgba(60, 120, 180, 0.25);
   --mtr-iconBg-success: #DEEDE9;
   --mtr-iconBg-success_onDark: rgba(0, 173, 130, 0.25);
   --mtr-iconBg-warning: #F9ECDC;
   --mtr-iconBg-warning_onDark: rgba(230, 130, 0, 0.25);
   --mtr-iconBg-important: #FBE4E7;
   --mtr-iconBg-important_onDark: rgba(248, 104, 118, 0.25);
-  --mtr-action-enabled: #0176B2;
-  --mtr-action-hover: #005C89;
-  --mtr-action-active: #004E73;
+  --mtr-action-enabled: #213F39;
+  --mtr-action-hover: #0D2420;
+  --mtr-action-active: #0D2420;
   --mtr-action-important-enabled: #C10B1E;
   --mtr-action-important-hover: #A20919;
   --mtr-action-important-active: #850715;
@@ -97,8 +97,8 @@
   --mtr-action-monochrome-onDark-disabled: rgba(255, 255, 255, 0.20);
   --mtr-action-monochrome-onDark-bg: rgba(255, 255, 255, 0.09);
   --mtr-action-monochrome-onDark-lowEmphasis-enabled: rgba(255, 255, 255, 0.65);
-  --mtr-status-info: #617BFF;
-  --mtr-status-info_onDark: rgba(122, 145, 255, 0.25);
+  --mtr-status-info: #3C78B4;
+  --mtr-status-info_onDark: rgba(60, 120, 180, 0.25);
   --mtr-status-success: #1B7F66;
   --mtr-status-success_onDark: rgba(0, 173, 130, 0.25);
   --mtr-status-warning: #CC7300;
@@ -106,8 +106,8 @@
   --mtr-status-warning_onDark: rgba(230, 130, 0, 0.25);
   --mtr-status-important: #DC0C22;
   --mtr-status-important_onDark: rgba(248, 104, 118, 0.25);
-  --mtr-badge-info: #4766FF;
-  --mtr-badge-infoLight: #DBE2FF;
+  --mtr-badge-info: #3C78B4;
+  --mtr-badge-infoLight: #DBE8F4;
   --mtr-badge-success: #19856B;
   --mtr-badge-successLight: #D9EDE6;
   --mtr-badge-warning: #AD6200;
@@ -123,8 +123,8 @@
   --mtr-badge-fuschiaLight: #FCCFF6;
   --mtr-badge-purple: #A14CE1;
   --mtr-badge-purpleLight: #EDDCF9;
-  --mtr-badge-charcoal: #4F4F4F;
-  --mtr-badge-charcoalLight: #E3E3E3;
+  --mtr-badge-charcoal: #4A5552;
+  --mtr-badge-charcoalLight: #DFE3E2;
   --mtr-avatar-01: #D6EAFF;
   --mtr-avatar-02: #FFDBFA;
   --mtr-avatar-03: #EFE0FF;
@@ -134,21 +134,21 @@
   --mtr-avatar-07: #FFE3DB;
   --mtr-avatar-08: #FFE2C2;
   --mtr-dataViz-border: #000000;
-  --mtr-dataViz-01: #001446;
-  --mtr-dataViz-02: #062E69;
-  --mtr-dataViz-03: #094A8D;
-  --mtr-dataViz-04: #0068B2;
-  --mtr-dataViz-05: #0094BE;
-  --mtr-dataViz-06: #37B9B2;
-  --mtr-dataViz-07: #9FD7AB;
-  --mtr-dataViz-08: #F0F2BD;
-  --mtr-dataViz-09: #F1D89A;
-  --mtr-dataViz-10: #EFB777;
-  --mtr-dataViz-11: #ED9461;
-  --mtr-dataViz-12: #E96959;
-  --mtr-dataViz-13: #C74046;
-  --mtr-dataViz-14: #95222C;
-  --mtr-dataViz-15: #660011;
+  --mtr-dataViz-01: #0D2420;
+  --mtr-dataViz-02: #152E28;
+  --mtr-dataViz-03: #213F39;
+  --mtr-dataViz-04: #2C4E47;
+  --mtr-dataViz-05: #3A6058;
+  --mtr-dataViz-06: #5A7D6B;
+  --mtr-dataViz-07: #8A9E7A;
+  --mtr-dataViz-08: #C0B86E;
+  --mtr-dataViz-09: #B87333;
+  --mtr-dataViz-10: #C68540;
+  --mtr-dataViz-11: #D49558;
+  --mtr-dataViz-12: #E0A870;
+  --mtr-dataViz-13: #3C78B4;
+  --mtr-dataViz-14: #2C5A8A;
+  --mtr-dataViz-15: #1D3D60;
   --mtr-cvd-blue: #0072B2;
   --mtr-cvd-lightBlue: #56B4E9;
   --mtr-cvd-yellow: #F0E442;
@@ -157,40 +157,40 @@
   --mtr-cvd-vermillion: #D55E00;
   --mtr-cvd-pink: #CC79A7;
   --mtr-cvd-charcoal: #323232;
-  --mtr-hover-onLight: rgba(0, 0, 0, 0.05);
+  --mtr-hover-onLight: rgba(33, 63, 57, 0.05);
   --mtr-hover-onDark: rgba(255, 255, 255, 0.15);
-  --mtr-selected-onLight: rgba(0, 0, 0, 0.09);
-  --mtr-selectedHighlight: #E7F2EE;
-  --mtr-selectedHighlight_hover: #D0E6DE;
-  --mtr-focusBorder-onLight: #3086BF;
+  --mtr-selected-onLight: rgba(33, 63, 57, 0.09);
+  --mtr-selectedHighlight: rgba(212, 149, 88, 0.12);
+  --mtr-selectedHighlight_hover: rgba(212, 149, 88, 0.20);
+  --mtr-focusBorder-onLight: #007E8A;
   --mtr-focusBorder-onDark: rgba(255, 255, 255, 0.65);
-  --mtr-scrim: rgba(0, 0, 0, 0.32);
-  --mtr-scrollbar-enabled-onLight: rgba(0, 0, 0, 0.42);
+  --mtr-scrim: rgba(33, 63, 57, 0.34);
+  --mtr-scrollbar-enabled-onLight: rgba(33, 63, 57, 0.42);
   --mtr-scrollbar-enabled-onDark: rgba(255, 255, 255, 0.43);
-  --mtr-scrollbar-hover-onLight: rgba(0, 0, 0, 0.57);
+  --mtr-scrollbar-hover-onLight: rgba(33, 63, 57, 0.57);
   --mtr-scrollbar-hover-onDark: rgba(255, 255, 255, 0.58);
-  --mtr-scrollbar-active-onLight: rgba(0, 0, 0, 0.72);
+  --mtr-scrollbar-active-onLight: rgba(33, 63, 57, 0.72);
   --mtr-scrollbar-active-onDark: rgba(255, 255, 255, 0.73);
-  --mtr-navItemText-enabled-onLight: rgba(0, 0, 0, 0.72);
+  --mtr-navItemText-enabled-onLight: rgba(33, 63, 57, 0.72);
   --mtr-navItemText-enabled-onDark: rgba(255, 255, 255, 0.88);
-  --mtr-buttonToggleBg-onLight: rgba(0, 0, 0, 0.08);
+  --mtr-buttonToggleBg-onLight: rgba(33, 63, 57, 0.08);
   --mtr-buttonToggleBg-onDark: rgba(255, 255, 255, 0.08);
-  --mtr-chipBg-enabled: rgba(0, 0, 0, 0.08);
-  --mtr-chipBg-hover: rgba(0, 0, 0, 0.13);
-  --mtr-progressIndicatorTrack: rgba(0, 0, 0, 0.15);
-  --mtr-tableCellHighlight-highEmphasis: #78CFB8;
-  --mtr-tableCellHighlight-midEmphasis: #E7F2EE;
-  --mtr-grid-finishedRowText: #595959;
-  --mtr-grid-packageIconColor: #595959;
+  --mtr-chipBg-enabled: rgba(33, 63, 57, 0.08);
+  --mtr-chipBg-hover: rgba(33, 63, 57, 0.13);
+  --mtr-progressIndicatorTrack: rgba(33, 63, 57, 0.15);
+  --mtr-tableCellHighlight-highEmphasis: #5AAE90;
+  --mtr-tableCellHighlight-midEmphasis: #DCE8E5;
+  --mtr-grid-finishedRowText: #5A6562;
+  --mtr-grid-packageIconColor: #5A6562;
 
   /* ==========================================================================
-     Non-color theme tokens (Trace defaults)
+     Non-color theme tokens (RID defaults)
      Overridden by SwitchableThemeProvider at runtime for other themes
      ========================================================================== */
 
   /* Typography */
-  --mtr-typo-fontFamilies-display: var(--font-dm-sans), sans-serif;
-  --mtr-typo-fontFamilies-body: var(--font-dm-sans), sans-serif;
+  --mtr-typo-fontFamilies-display: var(--font-inter), sans-serif;
+  --mtr-typo-fontFamilies-body: var(--font-inter), sans-serif;
   --mtr-typo-fontFamilies-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   --mtr-typo-fontWeights-regular: 400;
   --mtr-typo-fontWeights-medium: 500;
@@ -212,17 +212,17 @@
   --mtr-radius-3xl: 32px;
   --mtr-radius-full: 9999px;
 
-  /* Elevation (Shadows) */
+  /* Elevation (Shadows — forest green tinted) */
   --mtr-elevation-none: none;
-  --mtr-elevation-xs: 0px 1px 2px rgba(0, 0, 0, 0.05);
-  --mtr-elevation-sm: 0px 1px 3px rgba(0, 0, 0, 0.1), 0px 1px 2px rgba(0, 0, 0, 0.06);
-  --mtr-elevation-md: 0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --mtr-elevation-lg: 0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05);
-  --mtr-elevation-xl: 0px 20px 25px -5px rgba(0, 0, 0, 0.1), 0px 10px 10px -5px rgba(0, 0, 0, 0.04);
-  --mtr-elevation-2xl: 0px 25px 50px -12px rgba(0, 0, 0, 0.25);
-  --mtr-elevation-inner: inset 0px 2px 4px rgba(0, 0, 0, 0.06);
-  --mtr-elevation-brand: 0px 4px 14px rgba(0, 81, 81, 0.25);
-  --mtr-elevation-brandLg: 0px 10px 25px rgba(0, 81, 81, 0.3);
+  --mtr-elevation-xs: 0px 1px 2px rgba(33, 63, 57, 0.06);
+  --mtr-elevation-sm: 0px 1px 3px rgba(33, 63, 57, 0.10), 0px 1px 2px rgba(33, 63, 57, 0.08);
+  --mtr-elevation-md: 0px 4px 6px -1px rgba(33, 63, 57, 0.10), 0px 2px 4px -1px rgba(33, 63, 57, 0.08);
+  --mtr-elevation-lg: 0px 10px 15px -3px rgba(33, 63, 57, 0.10), 0px 4px 6px -2px rgba(33, 63, 57, 0.06);
+  --mtr-elevation-xl: 0px 20px 25px -5px rgba(33, 63, 57, 0.12), 0px 10px 10px -5px rgba(33, 63, 57, 0.06);
+  --mtr-elevation-2xl: 0px 25px 50px -12px rgba(33, 63, 57, 0.28);
+  --mtr-elevation-inner: inset 0px 2px 4px rgba(33, 63, 57, 0.08);
+  --mtr-elevation-brand: 0px 4px 14px rgba(33, 63, 57, 0.25);
+  --mtr-elevation-brandLg: 0px 10px 25px rgba(33, 63, 57, 0.30);
 
   /* Spacing (semantic overrides) */
   --mtr-space-unit: 4px;
@@ -231,6 +231,9 @@
   --mtr-space-cardPadding: 24px;
   --mtr-space-sectionGap: 48px;
   --mtr-space-componentGap: 16px;
+
+  /* Component Radius (RID: modern 4px buttons) */
+  --mtr-comp-radius-button: 4px;
 
   /* Icon Style */
   --mtr-icon-style-set: outlined;
@@ -260,7 +263,7 @@ body {
 }
 
 ::selection {
-  background-color: rgba(19, 53, 44, 0.2);
+  background-color: rgba(33, 63, 57, 0.2);
 }
 
 /* Custom scrollbar - uses neutral color scale */
@@ -283,11 +286,7 @@ body {
   background: var(--color-neutral-500);
 }
 
-/* Focus outline — only for elements that don't handle their own focus state */
-:focus-visible:not(button):not([role="button"]):not([role="tab"]):not([role="checkbox"]):not(select):not(input):not(textarea) {
-  outline: 2px solid var(--color-brand-primary);
-  outline-offset: 2px;
-}
+/* Focus outline — disabled globally; DS components manage their own focus states */
 
 /* SVG icon rendering optimizations */
 svg {
@@ -324,6 +323,58 @@ p code {
 }
 
 /* =============================================================================
+   DataTable checkbox — match DS Checkbox component (18px, 1.5px border, 2px radius)
+   ============================================================================= */
+
+input[type="checkbox"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  min-width: 18px;
+  min-height: 18px;
+  max-width: 18px;
+  max-height: 18px;
+  box-sizing: border-box;
+  border: 1.5px solid var(--mtr-border-midEmphasis-onLight);
+  border-radius: var(--mtr-radius-xs, 2px);
+  background: transparent;
+  cursor: pointer;
+  transition: all 150ms ease;
+  flex-shrink: 0;
+  margin: 0;
+  padding: 0;
+}
+
+input[type="checkbox"]:hover {
+  border-color: var(--mtr-border-highEmphasis-onLight);
+}
+
+input[type="checkbox"]:checked {
+  background-color: var(--mtr-brand-default);
+  border-color: var(--mtr-brand-default);
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='12' viewBox='0 0 12 12' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2.5 6L5 8.5L9.5 3.5' stroke='white' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 12px 12px;
+}
+
+input[type="checkbox"]:indeterminate {
+  background-color: var(--mtr-brand-default);
+  border-color: var(--mtr-brand-default);
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='12' viewBox='0 0 12 12' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3 6H9' stroke='white' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 12px 12px;
+}
+
+input[type="checkbox"]:focus-visible {
+  outline: 2px solid var(--mtr-focusBorder-onLight);
+  outline-offset: 2px;
+}
+
+/* =============================================================================
    Dark mode overrides for DataTable (Microsoft-style neutral dark)
    Applied via .dark-table wrapper class
    ============================================================================= */
@@ -357,10 +408,19 @@ p code {
   background-color: #2a2d2e !important;
 }
 
-.dark-table [role="checkbox"],
 .dark-table input[type="checkbox"] {
   border-color: #555 !important;
   background-color: transparent !important;
+}
+
+.dark-table input[type="checkbox"]:hover {
+  border-color: #858585 !important;
+}
+
+.dark-table input[type="checkbox"]:checked,
+.dark-table input[type="checkbox"]:indeterminate {
+  background-color: var(--mtr-brand-default) !important;
+  border-color: var(--mtr-brand-default) !important;
 }
 
 .dark-table button {

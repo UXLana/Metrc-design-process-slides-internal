@@ -693,6 +693,7 @@ export default function LabelWizard({ isOpen, onClose, packages }: LabelWizardPr
     layout: '',
     topOffset: '',
     leftOffset: '',
+    rotation: '0',
     quantity: '',
     perReel: '',
     jobName: `Job-${new Date().toISOString().split('T')[0]}-001`,
@@ -762,7 +763,7 @@ export default function LabelWizard({ isOpen, onClose, packages }: LabelWizardPr
 
   const stepContent = [
     // Step 0: Package
-    <div key="package" style={{ display: 'flex', flexDirection: 'column', gap: spacing.md }}>
+    <div key="package" style={{ display: 'flex', flexDirection: 'column', gap: spacing.md, width: '100%', minWidth: 0 }}>
       <ProductCardCompact
         imageUrl={formData.imageUrl}
         name={formData.productId}
@@ -828,7 +829,7 @@ export default function LabelWizard({ isOpen, onClose, packages }: LabelWizardPr
     </div>,
 
     // Step 1: Label template
-    <div key="template" style={{ display: 'flex', flexDirection: 'column', gap: spacing.md }}>
+    <div key="template" style={{ display: 'flex', flexDirection: 'column', gap: spacing.md, width: '100%', minWidth: 0 }}>
       <div>
         <label style={labelStyle}>Template</label>
         <select
@@ -873,7 +874,7 @@ export default function LabelWizard({ isOpen, onClose, packages }: LabelWizardPr
           </select>
         </div>
       )}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: spacing.md }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: spacing.md }}>
         <div>
           <label style={labelStyle}>Top offset (in)</label>
           <input type="number" step="0.01" style={inputStyle} placeholder="0.00" value={formData.topOffset} onChange={(e) => setFormData({ ...formData, topOffset: e.target.value })} />
@@ -882,19 +883,30 @@ export default function LabelWizard({ isOpen, onClose, packages }: LabelWizardPr
           <label style={labelStyle}>Left offset (in)</label>
           <input type="number" step="0.01" style={inputStyle} placeholder="0.00" value={formData.leftOffset} onChange={(e) => setFormData({ ...formData, leftOffset: e.target.value })} />
         </div>
+        <div>
+          <label style={labelStyle}>Rotate (°)</label>
+          <select style={inputStyle} value={formData.rotation} onChange={(e) => setFormData({ ...formData, rotation: e.target.value })}>
+            <option value="0">0°</option>
+            <option value="90">90°</option>
+            <option value="180">180°</option>
+            <option value="270">270°</option>
+          </select>
+        </div>
       </div>
       <StepNav step={1} total={steps.length} onNext={handleNext} onPrev={handlePrev} />
     </div>,
 
     // Step 2: Label quantity
-    <div key="quantity" style={{ display: 'flex', flexDirection: 'column', gap: spacing.md }}>
-      <div>
-        <label style={labelStyle}>Total quantity</label>
-        <input type="number" style={inputStyle} placeholder="Enter quantity" value={formData.quantity} onChange={(e) => setFormData({ ...formData, quantity: e.target.value })} />
-      </div>
-      <div>
-        <label style={labelStyle}>Labels per reel</label>
-        <input type="number" style={inputStyle} placeholder="e.g. 500" value={formData.perReel} onChange={(e) => setFormData({ ...formData, perReel: e.target.value })} />
+    <div key="quantity" style={{ display: 'flex', flexDirection: 'column', gap: spacing.md, width: '100%', minWidth: 0 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: spacing.md }}>
+        <div>
+          <label style={labelStyle}>Total quantity</label>
+          <input type="number" style={inputStyle} placeholder="Enter quantity" value={formData.quantity} onChange={(e) => setFormData({ ...formData, quantity: e.target.value })} />
+        </div>
+        <div>
+          <label style={labelStyle}>Labels per reel</label>
+          <input type="number" style={inputStyle} placeholder="e.g. 500" value={formData.perReel} onChange={(e) => setFormData({ ...formData, perReel: e.target.value })} />
+        </div>
       </div>
       <div>
         <label style={labelStyle}>Reels needed</label>
@@ -917,13 +929,15 @@ export default function LabelWizard({ isOpen, onClose, packages }: LabelWizardPr
 
     // Step 3: Print job settings
     <div key="settings" style={{ display: 'flex', flexDirection: 'column', gap: spacing.md, width: '100%', minWidth: 0 }}>
-      <div style={{ width: '100%' }}>
-        <label style={labelStyle}>Job name</label>
-        <input type="text" style={{ ...inputStyle, width: '100%', minWidth: 0 }} value={formData.jobName} onChange={(e) => setFormData({ ...formData, jobName: e.target.value })} />
-      </div>
-      <div style={{ width: '100%' }}>
-        <label style={labelStyle}>Scheduled date</label>
-        <input type="date" style={{ ...inputStyle, width: '100%', minWidth: 0 }} defaultValue={new Date().toISOString().split('T')[0]} />
+      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: spacing.md }}>
+        <div>
+          <label style={labelStyle}>Job name</label>
+          <input type="text" style={{ ...inputStyle, width: '100%', minWidth: 0 }} value={formData.jobName} onChange={(e) => setFormData({ ...formData, jobName: e.target.value })} />
+        </div>
+        <div>
+          <label style={labelStyle}>Scheduled date</label>
+          <input type="date" style={{ ...inputStyle, width: '100%', minWidth: 0 }} defaultValue={new Date().toISOString().split('T')[0]} />
+        </div>
       </div>
       <StepNav step={3} total={steps.length} onNext={handleNext} onPrev={handlePrev} lastLabel="Finish" />
     </div>,
@@ -1079,12 +1093,13 @@ export default function LabelWizard({ isOpen, onClose, packages }: LabelWizardPr
                     }}
                   >
                     {Array.from({ length: perPage }, (_, i) => (
-                      <ComplianceLabel
-                        key={i}
-                        data={formData}
-                        scale={1}
-                        rotated={false}
-                      />
+                      <div key={i} style={{ transform: formData.rotation !== '0' ? `rotate(${formData.rotation}deg)` : undefined }}>
+                        <ComplianceLabel
+                          data={formData}
+                          scale={1}
+                          rotated={false}
+                        />
+                      </div>
                     ))}
                   </div>
                 </div>

@@ -1,6 +1,8 @@
 'use client'
 
 import React from 'react'
+import { Button } from 'mtr-design-system/components'
+import { ChevronDown } from 'lucide-react'
 import {
   colors,
   fontFamilies,
@@ -47,19 +49,21 @@ export default function AppHeader({
 
       {/* Right — Org + Avatar */}
       <div style={{ display: 'flex', alignItems: 'center', gap: spacing.sm }}>
-        <span
+        <Button
+          emphasis="low"
+          onDark
+          size="md"
+          rightIcon={<ChevronDown size={16} />}
           style={{
-            fontSize: '14px',
-            fontWeight: fontWeights.regular,
-            lineHeight: '20px',
             color: 'rgba(255, 255, 255, 0.85)',
+            fontWeight: fontWeights.regular,
+            padding: `4px ${spacing.xs}`,
+            height: '32px',
+            minWidth: 0,
           }}
         >
           {orgName}
-        </span>
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" style={{ flexShrink: 0 }}>
-          <path d="M4 6L8 10L12 6" stroke="rgba(255,255,255,0.6)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
+        </Button>
         <div
           style={{
             display: 'flex',

@@ -1,7 +1,8 @@
 'use client'
 
-import { createContext, useContext, useEffect, useState, useCallback, useMemo } from 'react'
-import { SwitchableThemeProvider, useThemeSwitcher } from '@/styles/themes'
+import { createContext, useContext, useEffect, useLayoutEffect, useState, useCallback, useMemo } from 'react'
+import { ThemeProvider, ridTheme } from '@/styles/themes'
+import { applyAllThemeVars } from '@/styles/themes/css-vars'
 
 // =============================================================================
 // DARK PALETTE (Microsoft-style neutral dark theme)
@@ -64,12 +65,16 @@ function DarkModeProvider({ children }: { children: React.ReactNode }) {
 }
 
 // =============================================================================
-// THEME FORCER
+// RID THEME APPLIER — sets CSS variables on :root immediately
 // =============================================================================
 
-function ForceTraceTheme({ children }: { children: React.ReactNode }) {
-  const { setThemeName } = useThemeSwitcher()
-  useEffect(() => { setThemeName('trace') }, [setThemeName])
+function RIDThemeVars({ children }: { children: React.ReactNode }) {
+  useLayoutEffect(() => {
+    applyAllThemeVars(ridTheme, document.documentElement)
+    const el = document.documentElement
+    el.style.setProperty('--mtr-selectedHighlight', 'rgba(212, 149, 88, 0.12)')
+    el.style.setProperty('--mtr-selectedHighlight_hover', 'rgba(212, 149, 88, 0.20)')
+  }, [])
   return <>{children}</>
 }
 
@@ -79,10 +84,10 @@ function ForceTraceTheme({ children }: { children: React.ReactNode }) {
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <SwitchableThemeProvider>
-      <ForceTraceTheme>
+    <ThemeProvider theme={ridTheme}>
+      <RIDThemeVars>
         <DarkModeProvider>{children}</DarkModeProvider>
-      </ForceTraceTheme>
-    </SwitchableThemeProvider>
+      </RIDThemeVars>
+    </ThemeProvider>
   )
 }

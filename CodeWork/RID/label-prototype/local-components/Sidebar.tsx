@@ -175,7 +175,6 @@ export default function Sidebar() {
       <div
         style={{
           marginTop: 'auto',
-          borderTop: `1px solid ${isDark ? dark.border : colors.border.lowEmphasis.onLight}`,
         }}
       >
         {/* Dark mode toggle */}

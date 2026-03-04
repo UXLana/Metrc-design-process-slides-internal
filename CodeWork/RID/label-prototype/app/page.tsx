@@ -15,7 +15,7 @@ import {
 import {
   Printer,
   Package as PackageIcon,
-  Trash2,
+  Archive,
   Download,
 } from 'lucide-react'
 import LabelWizard from '@/local-components/LabelWizard'
@@ -105,14 +105,14 @@ export default function PackagesPage() {
             fontFamily: fontFamilies.body,
             fontWeight: fontWeights.medium,
             color: isDark ? colors.brand.lighter : colors.text.action.enabled,
-            textDecoration: 'none',
+            textDecoration: 'underline',
             transition: `color ${transitionPresets.default}`,
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.textDecoration = 'underline'
+            e.currentTarget.style.textDecoration = 'none'
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.textDecoration = 'none'
+            e.currentTarget.style.textDecoration = 'underline'
           }}
         >
           {row.product}
@@ -180,18 +180,11 @@ export default function PackagesPage() {
           <DataTable.Toolbar>
             <DataTable.Toolbar.Left>
               <DataTable.SelectionInfo count={selectedKeys.size}>
-                <DataTable.IconButton
-                  title="Print selected"
-                  label="Print"
-                  onClick={handlePrintSelected}
-                >
-                  <Printer size={16} />
-                </DataTable.IconButton>
                 <DataTable.IconButton title="Export selected" label="Export">
                   <Download size={16} />
                 </DataTable.IconButton>
-                <DataTable.IconButton title="Delete selected" label="Delete">
-                  <Trash2 size={16} />
+                <DataTable.IconButton title="Archive selected" label="Archive">
+                  <Archive size={16} />
                 </DataTable.IconButton>
               </DataTable.SelectionInfo>
             </DataTable.Toolbar.Left>

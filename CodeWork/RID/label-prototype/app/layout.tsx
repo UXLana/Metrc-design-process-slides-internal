@@ -1,15 +1,13 @@
 import type { Metadata } from "next";
-import { DM_Sans } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/local-components/Providers";
 import AppShell from "@/local-components/AppShell";
 
-const dmSans = DM_Sans({
+const inter = Inter({
   subsets: ["latin"],
-  weight: ['400', '500', '600', '700'],
-  style: ['normal', 'italic'],
   display: 'swap',
-  variable: '--font-dm-sans',
+  variable: '--font-inter',
 });
 
 export const metadata: Metadata = {
@@ -23,8 +21,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={dmSans.variable} suppressHydrationWarning>
-      <body style={{ display: 'flex', flexDirection: 'column', height: '100vh', margin: 0 }} suppressHydrationWarning>
+    <html lang="en" className={inter.variable} suppressHydrationWarning>
+      <body className={inter.className} style={{ display: 'flex', flexDirection: 'column', height: '100vh', margin: 0 }} suppressHydrationWarning>
         <Providers>
           <AppShell>{children}</AppShell>
         </Providers>
