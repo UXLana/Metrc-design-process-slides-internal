@@ -326,6 +326,11 @@ p code {
    DataTable checkbox — match DS Checkbox component (18px, 1.5px border, 2px radius)
    ============================================================================= */
 
+/* Force table headers to use surface.light (blends with page bg) */
+th, thead th {
+  background-color: var(--mtr-surface-light) !important;
+}
+
 input[type="checkbox"] {
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -398,7 +403,7 @@ input[type="checkbox"]:focus-visible {
 
 .dark-table th,
 .dark-table thead th {
-  background-color: #252526 !important;
+  background-color: var(--mtr-surface-light) !important;
   color: #858585 !important;
   border-bottom-color: #3c3c3c !important;
 }

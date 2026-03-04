@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import { DataTable, TabBar, Button } from 'mtr-design-system/components'
+import { DataTable, TabBar, Button, Input } from 'mtr-design-system/components'
 import {
   colors,
   typography,
@@ -17,6 +17,7 @@ import {
   Package as PackageIcon,
   Archive,
   Download,
+  Search,
 } from 'lucide-react'
 import LabelWizard from '@/local-components/LabelWizard'
 import Link from 'next/link'
@@ -74,6 +75,7 @@ export default function PackagesPage() {
   const displayMode = 'table' as const
   const [printTarget, setPrintTarget] = useState<any[] | null>(null)
   const [activeTab, setActiveTab] = useState<string>('active')
+  const [searchQuery, setSearchQuery] = useState('')
   const { isDark } = useDarkMode()
 
   const textHigh = isDark ? dark.text : colors.text.highEmphasis.onLight
@@ -189,6 +191,14 @@ export default function PackagesPage() {
               </DataTable.SelectionInfo>
             </DataTable.Toolbar.Left>
             <DataTable.Toolbar.Right>
+              <Input
+                placeholder="Search..."
+                startAdornment={<Search size={16} />}
+                size="sm"
+                value={searchQuery}
+                onChange={(val) => setSearchQuery(val)}
+                style={{ marginBottom: 0, width: '200px' }}
+              />
               <DataTable.FilterButton />
               <DataTable.SortButton />
             </DataTable.Toolbar.Right>
