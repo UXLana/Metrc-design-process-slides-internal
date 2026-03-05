@@ -11,24 +11,25 @@ import {
   borderRadius,
   shadows,
   transitionPresets,
+  productCard,
 } from '@/styles/design-tokens'
 import {
   Printer,
   Package as PackageIcon,
   Archive,
-  Download,
   Search,
+  Columns3,
 } from 'lucide-react'
 import LabelWizard from '@/local-components/LabelWizard'
 import Link from 'next/link'
 import { useDarkMode, dark } from '@/local-components/Providers'
 
-const packages = [
-  { id: '1A4FF0300000026000000295', product: 'Blue Dream Pre-Roll', type: 'Flower', quantity: '100 ea', date: '2026-02-28' },
-  { id: '1A4FF0300000026000000296', product: 'OG Kush Cartridge', type: 'Concentrate', quantity: '50 ea', date: '2026-03-01' },
-  { id: '1A4FF0300000026000000297', product: 'Sour Diesel Gummies', type: 'Edible', quantity: '200 ea', date: '2026-03-02' },
-  { id: '1A4FF0300000026000000298', product: 'GSC Flower 3.5g', type: 'Flower', quantity: '45 ea', date: '2026-03-02' },
-  { id: '1A4FF0300000026000000299', product: 'CBD Tincture', type: 'Tincture', quantity: '30 ea', date: '2026-03-03' },
+const initialPackages = [
+  { id: '1A4FF0300000026000000295', product: 'Blue Dream Pre-Roll', type: 'Flower', quantity: '100 ea', date: '2026-02-28', image: '/blue-dream-preroll.png', status: 'active' as const },
+  { id: '1A4FF0300000026000000296', product: 'OG Kush Cartridge', type: 'Concentrate', quantity: '50 ea', date: '2026-03-01', image: '/og-kush-cartridge.png', status: 'active' as const },
+  { id: '1A4FF0300000026000000297', product: 'Sour Diesel Gummies', type: 'Edible', quantity: '200 ea', date: '2026-03-02', image: '/sour-diesel-gummies.png', status: 'active' as const },
+  { id: '1A4FF0300000026000000298', product: 'GSC Flower 3.5g', type: 'Flower', quantity: '45 ea', date: '2026-03-02', image: '/gsc-flower.png', status: 'active' as const },
+  { id: '1A4FF0300000026000000299', product: 'CBD Tincture', type: 'Tincture', quantity: '30 ea', date: '2026-03-03', image: '/cbd-tincture.png', status: 'active' as const },
 ]
 
 function PrintButton({ onClick, isDark }: { onClick: () => void; isDark: boolean }) {
@@ -70,6 +71,7 @@ const packageTabs = [
 ]
 
 export default function PackagesPage() {
+  const [packages, setPackages] = useState(initialPackages)
   const [selectedKeys, setSelectedKeys] = useState<Set<string>>(new Set())
   const [isWizardOpen, setIsWizardOpen] = useState(false)
   const displayMode = 'table' as const
@@ -80,6 +82,24 @@ export default function PackagesPage() {
 
   const textHigh = isDark ? dark.text : colors.text.highEmphasis.onLight
   const textLow = isDark ? dark.textMuted : colors.text.lowEmphasis.onLight
+
+  const filteredPackages = packages.filter((pkg) => {
+    const matchesSearch =
+      pkg.product.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      pkg.id.toLowerCase().includes(searchQuery.toLowerCase())
+    if (!matchesSearch) return false
+    return pkg.status === activeTab
+  })
+
+  const handleStage = () => {
+    if (selectedKeys.size === 0) return
+    setPackages((prev) =>
+      prev.map((pkg) =>
+        selectedKeys.has(pkg.id) ? { ...pkg, status: 'staged' as const } : pkg
+      )
+    )
+    setSelectedKeys(new Set())
+  }
 
   const handlePrintSingle = (pkg: any) => {
     setPrintTarget([pkg])
@@ -94,6 +114,25 @@ export default function PackagesPage() {
 
   const columns = [
     {
+      key: 'thumbnail',
+      header: '',
+      width: '48px',
+      render: (row: any) => (
+        <div
+          style={{
+            width: '36px',
+            height: '36px',
+            borderRadius: borderRadius.sm,
+            backgroundColor: productCard.image.background,
+            flexShrink: 0,
+            overflow: 'hidden',
+          }}
+        >
+          <img src={row.image} alt={row.product} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+        </div>
+      ),
+    },
+    {
       key: 'product',
       header: 'Product',
       width: '25%',
@@ -106,7 +145,7 @@ export default function PackagesPage() {
           style={{
             fontFamily: fontFamilies.body,
             fontWeight: fontWeights.medium,
-            color: isDark ? colors.brand.lighter : colors.text.action.enabled,
+            color: isDark ? '#5AAE90' : colors.text.action.enabled,
             textDecoration: 'underline',
             transition: `color ${transitionPresets.default}`,
           }}
@@ -166,25 +205,22 @@ export default function PackagesPage() {
         <TabBar
           tabs={packageTabs}
           activeTab={activeTab}
-          onTabChange={setActiveTab}
+          onTabChange={(tab) => { setActiveTab(tab); setSelectedKeys(new Set()) }}
           onDark={isDark}
           hasDivider={false}
         />
         <div style={{ display: 'flex', gap: spacing.sm }}>
           <Button emphasis="low" size="md">Import</Button>
-          <Button emphasis="high" size="md">Stage</Button>
+          <Button emphasis="high" size="md" onClick={handleStage} disabled={activeTab !== 'active' || selectedKeys.size === 0}>Stage</Button>
         </div>
       </div>
 
       {/* DataTable Toolbar + Table */}
-      <div className={isDark ? 'dark-table' : ''}>
-        <div style={{ marginBottom: spacing.sm }}>
+      <div className={`copper-highlight ${isDark ? 'dark-table' : ''}`}>
+        <div className="mtr-toolbar" style={{ marginBottom: spacing.sm }}>
           <DataTable.Toolbar>
             <DataTable.Toolbar.Left>
               <DataTable.SelectionInfo count={selectedKeys.size}>
-                <DataTable.IconButton title="Export selected" label="Export">
-                  <Download size={16} />
-                </DataTable.IconButton>
                 <DataTable.IconButton title="Archive selected" label="Archive">
                   <Archive size={16} />
                 </DataTable.IconButton>
@@ -200,7 +236,9 @@ export default function PackagesPage() {
                 style={{ marginBottom: 0, width: '200px' }}
               />
               <DataTable.FilterButton />
-              <DataTable.SortButton />
+              <DataTable.IconButton title="Configure columns">
+                <Columns3 size={16} />
+              </DataTable.IconButton>
             </DataTable.Toolbar.Right>
           </DataTable.Toolbar>
         </div>
@@ -208,7 +246,7 @@ export default function PackagesPage() {
           display={displayMode}
           density="comfortable"
           columns={columns}
-          data={packages}
+          data={filteredPackages}
           rowKey={(row) => row.id}
           selectable
           selectedKeys={selectedKeys}
@@ -225,7 +263,35 @@ export default function PackagesPage() {
               }}
             >
               <PackageIcon size={48} style={{ marginBottom: spacing.md, opacity: 0.5 }} />
-              <p style={{ ...typography.body.md, margin: 0 }}>No packages found</p>
+              <p style={{ ...typography.body.md, margin: 0, marginBottom: spacing.xs }}>
+                {activeTab === 'staged'
+                  ? 'No staged packages'
+                  : searchQuery
+                    ? `No packages match "${searchQuery}"`
+                    : 'No packages found'}
+              </p>
+              {activeTab === 'staged' && (
+                <p style={{ ...typography.body.sm, margin: 0, color: textLow }}>
+                  Import or stage packages from the Active tab to get started.
+                </p>
+              )}
+              {searchQuery && activeTab !== 'staged' && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery('')}
+                  style={{
+                    ...typography.body.sm,
+                    color: isDark ? '#5AAE90' : colors.text.action.enabled,
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    textDecoration: 'underline',
+                    marginTop: spacing.xs,
+                  }}
+                >
+                  Clear search
+                </button>
+              )}
             </div>
           }
         />

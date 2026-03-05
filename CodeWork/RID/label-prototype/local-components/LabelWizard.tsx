@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import {
   X,
   ChevronDown,
@@ -20,6 +20,8 @@ import {
   Check,
   Square,
   Search,
+  FileText,
+  FileSpreadsheet,
 } from 'lucide-react'
 import { Button, LinearStepper, FullScreenModal, FullScreenModalPanel } from 'mtr-design-system/components'
 import {
@@ -35,6 +37,8 @@ import {
   productCard,
 } from '@/styles/design-tokens'
 
+import { useDarkMode, dark } from './Providers'
+
 // =============================================================================
 // TYPES
 // =============================================================================
@@ -43,6 +47,9 @@ interface LabelWizardProps {
   isOpen: boolean
   onClose: () => void
   packages: any[]
+  initialSaved?: boolean
+  initialJobName?: string
+  initialQuantity?: number
 }
 
 // =============================================================================
@@ -54,6 +61,7 @@ function ProductCardCompact({
   name,
   tagId,
   brand,
+  market,
   onRemove,
   onClick,
   interactive = false,
@@ -63,12 +71,24 @@ function ProductCardCompact({
   name: string
   tagId: string
   brand?: string
+  market?: string
   onRemove?: () => void
   onClick?: () => void
   interactive?: boolean
   borderless?: boolean
 }) {
   const [hovered, setHovered] = useState(false)
+  const { isDark } = useDarkMode()
+
+  const borderColor = isDark ? dark.border : productCard.border.color
+  const bgColor = hovered 
+    ? (isDark ? dark.bgHover : colors.hover.onLight) 
+    : (borderless ? 'transparent' : (isDark ? dark.bgSurface : colors.surface.light))
+  
+  const nameColor = isDark ? dark.text : productCard.typography.name.color
+  const skuColor = isDark ? dark.textMuted : productCard.typography.sku.color
+  const brandBg = isDark ? dark.bgActive : colors.surface.lightDarker
+  const brandColor = isDark ? dark.textMuted : colors.text.lowEmphasis.onLight
 
   return (
     <div
@@ -79,10 +99,10 @@ function ProductCardCompact({
         display: 'flex',
         alignItems: 'flex-start',
         gap: spacing.sm,
-        border: borderless ? 'none' : `${productCard.border.width} solid ${productCard.border.color}`,
+        border: borderless ? 'none' : `${productCard.border.width} solid ${borderColor}`,
         borderRadius: borderless ? 0 : productCard.border.radius,
         padding: borderless ? `${spacing.sm} ${spacing.md}` : spacing.sm,
-        backgroundColor: hovered ? colors.hover.onLight : 'transparent',
+        backgroundColor: bgColor,
         position: 'relative',
         cursor: interactive ? 'pointer' : 'default',
         transition: `background-color ${transitionPresets.default}`,
@@ -92,7 +112,7 @@ function ProductCardCompact({
         style={{
           width: '64px',
           height: '64px',
-          backgroundColor: productCard.image.background,
+          backgroundColor: isDark ? '#fff' : productCard.image.background,
           borderRadius: productCard.image.borderRadius,
           display: 'flex',
           alignItems: 'center',
@@ -114,7 +134,7 @@ function ProductCardCompact({
             fontSize: productCard.typography.name.fontSize,
             fontWeight: productCard.typography.name.fontWeight,
             lineHeight: productCard.typography.name.lineHeight,
-            color: productCard.typography.name.color,
+            color: nameColor,
           }}
         >
           {name}
@@ -125,28 +145,48 @@ function ProductCardCompact({
             fontSize: productCard.typography.sku.fontSize,
             fontWeight: productCard.typography.sku.fontWeight,
             lineHeight: productCard.typography.sku.lineHeight,
-            color: productCard.typography.sku.color,
+            color: skuColor,
             marginTop: '2px',
           }}
         >
           {tagId}
         </div>
-        {brand && (
-          <div
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              marginTop: spacing.xs,
-              padding: `2px ${spacing.xs}`,
-              borderRadius: borderRadius.sm,
-              backgroundColor: colors.surface.lightDarker,
-              fontFamily: fontFamilies.body,
-              fontSize: '11px',
-              fontWeight: fontWeights.medium,
-              color: colors.text.lowEmphasis.onLight,
-            }}
-          >
-            {brand}
+        {(brand || market) && (
+          <div style={{ display: 'flex', gap: spacing['2xs'], marginTop: spacing.xs, flexWrap: 'wrap' }}>
+            {brand && (
+              <div
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  padding: `2px ${spacing.xs}`,
+                  borderRadius: borderRadius.sm,
+                  backgroundColor: brandBg,
+                  fontFamily: fontFamilies.body,
+                  fontSize: '11px',
+                  fontWeight: fontWeights.medium,
+                  color: brandColor,
+                }}
+              >
+                {brand}
+              </div>
+            )}
+            {market && (
+              <div
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  padding: `2px ${spacing.xs}`,
+                  borderRadius: borderRadius.sm,
+                  backgroundColor: isDark ? 'rgba(91, 155, 213, 0.20)' : '#E0EAF0',
+                  fontFamily: fontFamilies.body,
+                  fontSize: '11px',
+                  fontWeight: fontWeights.medium,
+                  color: isDark ? '#6BA3D6' : '#3C78B4',
+                }}
+              >
+                {market}
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -167,7 +207,7 @@ function ProductCardCompact({
             border: 'none',
             background: 'none',
             cursor: 'pointer',
-            color: colors.text.lowEmphasis.onLight,
+            color: isDark ? dark.textMuted : colors.text.lowEmphasis.onLight,
             padding: 0,
             flexShrink: 0,
           }}
@@ -197,6 +237,7 @@ function ProductSelect({
   const [isOpen, setIsOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const containerRef = React.useRef<HTMLDivElement>(null)
+  const { isDark } = useDarkMode()
 
   useEffect(() => {
     if (!isOpen) return
@@ -211,14 +252,14 @@ function ProductSelect({
   }, [isOpen])
 
   const recentProducts = [
-    { id: 'rp1', name: 'Cannabis-Infused Blood Raspberries', tagId: '12345-NG-567890', brand: 'Wyld', imageUrl: '/blue-dream-preroll.png' },
-    { id: 'rp2', name: 'Blue Dream Pre-Roll 1g', tagId: '1A4FF030...295', brand: 'Holistic', imageUrl: '/blue-dream-preroll.png' },
-    { id: 'rp3', name: 'OG Kush Cartridge 0.5g', tagId: '1A4FF030...296', brand: 'Holistic', imageUrl: '/blue-dream-preroll.png' },
-    { id: 'rp4', name: 'Sour Diesel Gummies 10pk', tagId: '1A4FF030...297', brand: 'Wyld', imageUrl: '/blue-dream-preroll.png' },
-    { id: 'rp5', name: 'GSC Flower 3.5g', tagId: '1A4FF030...298', brand: 'Holistic', imageUrl: '/blue-dream-preroll.png' },
-    { id: 'rp6', name: 'CBD Tincture 30ml', tagId: '1A4FF030...299', brand: 'Wyld', imageUrl: '/blue-dream-preroll.png' },
-    { id: 'rp7', name: 'Northern Lights Cartridge', tagId: '1A4FF030...300', brand: 'Holistic', imageUrl: '/blue-dream-preroll.png' },
-    { id: 'rp8', name: 'Pineapple Express Edibles', tagId: '1A4FF030...301', brand: 'Wyld', imageUrl: '/blue-dream-preroll.png' },
+    { id: 'rp1', name: 'Cannabis-Infused Blood Raspberries', tagId: '12345-NG-567890', brand: 'Wyld', market: 'Illinois', imageUrl: '/blue-dream-preroll.png' },
+    { id: 'rp2', name: 'Blue Dream Pre-Roll 1g', tagId: '1A4FF030...295', brand: 'Holistic', market: 'Illinois', imageUrl: '/blue-dream-preroll.png' },
+    { id: 'rp3', name: 'OG Kush Cartridge 0.5g', tagId: '1A4FF030...296', brand: 'Holistic', market: 'Nevada', imageUrl: '/blue-dream-preroll.png' },
+    { id: 'rp4', name: 'Sour Diesel Gummies 10pk', tagId: '1A4FF030...297', brand: 'Wyld', market: 'Michigan', imageUrl: '/blue-dream-preroll.png' },
+    { id: 'rp5', name: 'GSC Flower 3.5g', tagId: '1A4FF030...298', brand: 'Holistic', market: 'Illinois', imageUrl: '/blue-dream-preroll.png' },
+    { id: 'rp6', name: 'CBD Tincture 30ml', tagId: '1A4FF030...299', brand: 'Wyld', market: 'Nevada', imageUrl: '/blue-dream-preroll.png' },
+    { id: 'rp7', name: 'Northern Lights Cartridge', tagId: '1A4FF030...300', brand: 'Holistic', market: 'Michigan', imageUrl: '/blue-dream-preroll.png' },
+    { id: 'rp8', name: 'Pineapple Express Edibles', tagId: '1A4FF030...301', brand: 'Wyld', market: 'Illinois', imageUrl: '/blue-dream-preroll.png' },
   ]
 
   const handleSelect = (product: any) => {
@@ -248,14 +289,14 @@ function ProductSelect({
         style={{
           width: '100%',
           padding: `${spacing.xs} ${spacing.sm}`,
-          border: `1px solid ${colors.border.midEmphasis.onLight}`,
+          border: `1px solid ${isDark ? dark.border : colors.border.midEmphasis.onLight}`,
           borderRadius: borderRadius.md,
           ...typography.body.sm,
           outline: 'none',
           boxSizing: 'border-box',
           height: '36px',
-          backgroundColor: colors.surface.light,
-          color: value ? colors.text.highEmphasis.onLight : colors.text.lowEmphasis.onLight,
+          backgroundColor: isDark ? dark.bgInput : colors.surface.light,
+          color: value ? (isDark ? dark.text : colors.text.highEmphasis.onLight) : (isDark ? dark.textMuted : colors.text.lowEmphasis.onLight),
           cursor: 'pointer',
           display: 'flex',
           alignItems: 'center',
@@ -264,7 +305,7 @@ function ProductSelect({
         }}
       >
         <span>{value || 'Select product'}</span>
-        <ChevronDown size={16} style={{ color: colors.icon.enabled.onLight, flexShrink: 0 }} />
+        <ChevronDown size={16} style={{ color: isDark ? dark.textMuted : colors.icon.enabled.onLight, flexShrink: 0 }} />
       </button>
     )
   }
@@ -273,9 +314,9 @@ function ProductSelect({
     <div
       ref={containerRef}
       style={{
-        border: `1px solid ${colors.border.midEmphasis.onLight}`,
+        border: `1px solid ${isDark ? dark.border : colors.border.midEmphasis.onLight}`,
         borderRadius: borderRadius.lg,
-        backgroundColor: colors.surface.light,
+        backgroundColor: isDark ? dark.bgSurface : colors.surface.light,
         overflow: 'hidden',
       }}
     >
@@ -297,6 +338,7 @@ function ProductSelect({
             boxSizing: 'border-box',
             height: '28px',
             backgroundColor: 'transparent',
+            color: isDark ? dark.text : 'inherit',
           }}
         />
         <Search
@@ -306,7 +348,7 @@ function ProductSelect({
             left: spacing.md,
             top: '50%',
             transform: 'translateY(-50%)',
-            color: colors.icon.enabled.onLight,
+            color: isDark ? dark.textMuted : colors.icon.enabled.onLight,
             pointerEvents: 'none',
           }}
         />
@@ -326,25 +368,25 @@ function ProductSelect({
               width: '20px',
               height: '20px',
               borderRadius: borderRadius.full,
-              backgroundColor: colors.border.midEmphasis.onLight,
+              backgroundColor: isDark ? dark.border : colors.border.midEmphasis.onLight,
               border: 'none',
               cursor: 'pointer',
               padding: 0,
             }}
           >
-            <X size={12} color={colors.surface.light} strokeWidth={2.5} />
+            <X size={12} color={isDark ? dark.text : colors.surface.light} strokeWidth={2.5} />
           </button>
         )}
       </div>
 
       {/* Pinline under search */}
-      <div style={{ height: '1px', backgroundColor: colors.border.lowEmphasis.onLight }} />
+      <div style={{ height: '1px', backgroundColor: isDark ? dark.border : colors.border.lowEmphasis.onLight }} />
 
       {/* Recent label */}
       <div
         style={{
           ...typography.label.sm,
-          color: colors.text.lowEmphasis.onLight,
+          color: isDark ? dark.textMuted : colors.text.lowEmphasis.onLight,
           padding: `${spacing.sm} ${spacing.md} 0`,
           marginBottom: spacing.md,
         }}
@@ -357,12 +399,13 @@ function ProductSelect({
         {recentProducts.map((product, idx) => (
           <div key={product.id}>
             {idx > 0 && (
-              <div style={{ height: '1px', backgroundColor: colors.border.lowEmphasis.onLight, margin: `0 ${spacing.md}` }} />
+              <div style={{ height: '1px', backgroundColor: isDark ? dark.border : colors.border.lowEmphasis.onLight, margin: `0 ${spacing.md}` }} />
             )}
             <ProductCardCompact
               name={product.name}
               tagId={product.tagId}
               brand={product.brand}
+              market={product.market}
               imageUrl={product.imageUrl}
               interactive
               onClick={() => handleSelect(product)}
@@ -390,6 +433,7 @@ function CheckboxToggle({
   label: string
   description?: string
 }) {
+  const { isDark } = useDarkMode()
   return (
     <label
       style={{
@@ -406,7 +450,7 @@ function CheckboxToggle({
           borderRadius: borderRadius.xs,
           border: checked
             ? `2px solid ${colors.brand.default}`
-            : `2px solid ${colors.border.midEmphasis.onLight}`,
+            : `2px solid ${isDark ? dark.border : colors.border.midEmphasis.onLight}`,
           backgroundColor: checked ? colors.brand.default : 'transparent',
           display: 'flex',
           alignItems: 'center',
@@ -424,7 +468,7 @@ function CheckboxToggle({
           style={{
             ...typography.body.sm,
             fontWeight: fontWeights.medium,
-            color: colors.text.highEmphasis.onLight,
+            color: isDark ? dark.text : colors.text.highEmphasis.onLight,
           }}
         >
           {label}
@@ -433,7 +477,7 @@ function CheckboxToggle({
           <div
             style={{
               ...typography.body.xs,
-              color: colors.text.lowEmphasis.onLight,
+              color: isDark ? dark.textMuted : colors.text.lowEmphasis.onLight,
               marginTop: '1px',
             }}
           >
@@ -503,6 +547,7 @@ function ComplianceLabel({ data, scale = 1, rotated = false }: { data: any; scal
         boxSizing: 'border-box',
         overflow: 'hidden',
         fontSize: `${scale * 100}%`,
+        color: '#191C1B',
       }}
     >
       {/* Header */}
@@ -647,27 +692,35 @@ function StepNav({
   onNext,
   onPrev,
   lastLabel = 'Finish',
+  loading = false,
+  hideNav = false,
+  nextDisabled = false,
 }: {
   step: number
   total: number
   onNext: () => void
   onPrev: () => void
   lastLabel?: string
+  loading?: boolean
+  hideNav?: boolean
+  nextDisabled?: boolean
 }) {
+  if (hideNav) return null
   return (
-    <div
+    <nav
+      aria-label="Step navigation"
       style={{ display: 'flex', gap: spacing.xs, marginTop: spacing.xs }}
       onClick={(e) => e.stopPropagation()}
     >
       {step > 0 && (
-        <Button emphasis="mid" size="md" onClick={onPrev}>
+        <Button emphasis="mid" size="md" onClick={onPrev} disabled={loading}>
           Previous
         </Button>
       )}
-      <Button emphasis="high" size="md" onClick={onNext}>
+      <Button emphasis="high" size="md" onClick={onNext} loading={loading} disabled={nextDisabled}>
         {step === total - 1 ? lastLabel : 'Next'}
       </Button>
-    </div>
+    </nav>
   )
 }
 
@@ -675,26 +728,41 @@ function StepNav({
 // MAIN: LABEL WIZARD
 // =============================================================================
 
-export default function LabelWizard({ isOpen, onClose, packages }: LabelWizardProps) {
+export default function LabelWizard({ isOpen, onClose, packages, initialSaved = false, initialJobName, initialQuantity }: LabelWizardProps) {
+  const { isDark } = useDarkMode()
   const [currentStep, setCurrentStep] = useState(0)
   const [previewPage, setPreviewPage] = useState(0)
   const [overrideEnabled, setOverrideEnabled] = useState(false)
   const [overrideProduct, setOverrideProduct] = useState<{ name: string; tagId: string; brand: string; imageUrl: string } | null>(null)
+  const [downloadMenuOpen, setDownloadMenuOpen] = useState(false)
+  const downloadMenuRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!downloadMenuOpen) return
+    function handleClick(e: MouseEvent) {
+      if (downloadMenuRef.current && !downloadMenuRef.current.contains(e.target as Node)) {
+        setDownloadMenuOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClick)
+    return () => document.removeEventListener('mousedown', handleClick)
+  }, [downloadMenuOpen])
   const [formData, setFormData] = useState({
     packageId: packages[0]?.id || '12345-NG-567890',
     productId: packages[0]?.product || 'Cannabis-Infused Blood Raspberries',
     overrideProduct: '',
     imageUrl: '/blue-dream-preroll.png',
     brand: 'Wyld',
+    market: 'Illinois',
     packagedDate: new Date().toISOString().split('T')[0],
     template: '',
     layout: '',
     topOffset: '',
     leftOffset: '',
     rotation: '0',
-    quantity: '',
-    perReel: '',
-    jobName: `Job-${new Date().toISOString().split('T')[0]}-001`,
+    quantity: initialQuantity ? String(initialQuantity) : '',
+    perReel: initialQuantity ? '500' : '',
+    jobName: initialJobName || `Job-${new Date().toISOString().split('T')[0]}-001`,
   })
 
   // When override is disabled, clear the selection
@@ -723,19 +791,34 @@ export default function LabelWizard({ isOpen, onClose, packages }: LabelWizardPr
     'ol114',
   ]
 
+  const [isSaved, setIsSaved] = useState(initialSaved)
+  const [isSaving, setIsSaving] = useState(false)
+  const [savedExpandedStep, setSavedExpandedStep] = useState<number | null>(null)
+
   const steps = [
     { id: 'package', label: 'Package', metadata: 'Verify package details' },
     { id: 'template', label: 'Label template', metadata: 'Select layout and design' },
-    { id: 'quantity', label: 'Label quantity', metadata: 'Set print counts' },
     { id: 'settings', label: 'Print job settings', metadata: 'Configure job details' },
   ]
 
   const handleNext = () => {
-    if (currentStep < steps.length - 1) setCurrentStep((s) => s + 1)
+    if (currentStep === steps.length - 1) {
+      handleSave()
+    } else {
+      setCurrentStep((s) => s + 1)
+    }
   }
 
   const handlePrev = () => {
     if (currentStep > 0) setCurrentStep((s) => s - 1)
+  }
+
+  const handleSave = () => {
+    setIsSaving(true)
+    setTimeout(() => {
+      setIsSaving(false)
+      setIsSaved(true)
+    }, 1200)
   }
 
   if (!isOpen) return null
@@ -743,22 +826,83 @@ export default function LabelWizard({ isOpen, onClose, packages }: LabelWizardPr
   const inputStyle: React.CSSProperties = {
     width: '100%',
     padding: `${spacing.xs} ${spacing.sm}`,
-    border: `1px solid ${colors.border.midEmphasis.onLight}`,
+    border: `1px solid ${isDark ? dark.border : colors.border.midEmphasis.onLight}`,
     borderRadius: borderRadius.md,
     ...typography.body.sm,
     outline: 'none',
     boxSizing: 'border-box',
     height: '36px',
+    backgroundColor: isDark ? dark.bgInput : colors.surface.light,
+    color: isDark ? dark.text : colors.text.highEmphasis.onLight,
   }
 
   const labelStyle: React.CSSProperties = {
     ...typography.label.sm,
-    color: colors.text.lowEmphasis.onLight,
+    color: isDark ? dark.textMuted : colors.text.lowEmphasis.onLight,
     display: 'block',
     marginBottom: spacing['2xs'],
   }
 
-  const stepContent = [
+  const summaryStyle: React.CSSProperties = {
+    ...typography.body.sm,
+    color: isDark ? dark.textMuted : colors.text.lowEmphasis.onLight,
+    backgroundColor: isDark ? dark.bgSurface : colors.surface.light,
+    border: `1px solid ${isDark ? dark.border : colors.border.lowEmphasis.onLight}`,
+    borderRadius: borderRadius.md,
+    padding: `${spacing.sm} ${spacing.md}`,
+  }
+
+  const templateLabels: Record<string, string> = {
+    'mqr': 'MQR', '3x1.5-concentrate': '3×1.5 Concentrate V2', '3x1.5-distillate': '3×1.5 Distillate',
+    '3x1.5-infused': '3×1.5 Infused Preroll', '3x1-disposable': '3×1 Disposable', '3x1-flower': '3×1 Flower',
+    '3wx1.5h-infused': '3w×1.5h Infused Preroll', '2.5x1.5-nv-flower': '2.5×1.5 NV Flower',
+    '3x1.5-nv-fgl-concentrate': '3×1.5 NV Concentrate', '3x1.5-nv-fgl-edible': '3×1.5 NV Edible',
+    '3x1.5-nv-fgl-flower': '3×1.5 NV Flower', '2x1-flower': '2×1 Flower', '4x2-edible': '4×2 Edible',
+    '4x3-retail': '4×3 Retail', '4x6-shipping': '4×6 Shipping', '2x1-vape': '2×1 Vape',
+    '3x2-tincture': '3×2 Tincture', '2.5x1-preroll': '2.5×1 Preroll', '3.5x2-topical': '3.5×2 Topical',
+  }
+
+  const stepContent = isSaved ? [
+    // Saved Step 0: Package (read-only summary)
+    <div key="package-saved" style={{ width: '100%', minWidth: 0 }}>
+      <div style={summaryStyle}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: spacing.sm }}>
+          <div style={{ width: '40px', height: '40px', borderRadius: borderRadius.sm, overflow: 'hidden', flexShrink: 0, backgroundColor: isDark ? '#fff' : productCard.image.background }}>
+            <img src={formData.imageUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          </div>
+          <div style={{ minWidth: 0 }}>
+            <div style={{ ...typography.body.sm, fontWeight: fontWeights.semibold, color: isDark ? dark.text : colors.text.highEmphasis.onLight }}>{formData.productId}</div>
+            <div style={{ fontFamily: fontFamilies.mono, fontSize: '11px', color: isDark ? dark.textMuted : colors.text.lowEmphasis.onLight }}>{formData.packageId}</div>
+          </div>
+        </div>
+        {formData.overrideProduct && (
+          <div style={{ marginTop: spacing.xs, fontSize: '12px' }}>Override: {formData.overrideProduct}</div>
+        )}
+        <div style={{ marginTop: spacing.xs, fontSize: '12px' }}>Packaged: {formData.packagedDate}</div>
+      </div>
+    </div>,
+
+    // Saved Step 1: Template (read-only summary)
+    <div key="template-saved" style={{ width: '100%', minWidth: 0 }}>
+      <div style={summaryStyle}>
+        <div style={{ ...typography.body.sm, color: isDark ? dark.text : colors.text.highEmphasis.onLight }}>
+          {templateLabels[formData.template] || 'No template selected'}
+        </div>
+        {formData.layout && <div style={{ fontSize: '12px', marginTop: '2px' }}>{formData.layout}</div>}
+        <div style={{ fontSize: '12px', marginTop: '2px' }}>
+          Offset: {formData.topOffset || '0'}/{formData.leftOffset || '0'} in · Rotate: {formData.rotation}°
+        </div>
+      </div>
+    </div>,
+
+    // Saved Step 2: Settings (read-only summary)
+    <div key="settings-saved" style={{ width: '100%', minWidth: 0 }}>
+      <div style={summaryStyle}>
+        <div style={{ ...typography.body.sm, color: isDark ? dark.text : colors.text.highEmphasis.onLight }}>{formData.jobName}</div>
+        <div style={{ fontSize: '12px', marginTop: '2px' }}>Scheduled: {new Date().toISOString().split('T')[0]}</div>
+      </div>
+    </div>,
+  ] : [
     // Step 0: Package
     <div key="package" style={{ display: 'flex', flexDirection: 'column', gap: spacing.md, width: '100%', minWidth: 0 }}>
       <ProductCardCompact
@@ -766,6 +910,7 @@ export default function LabelWizard({ isOpen, onClose, packages }: LabelWizardPr
         name={formData.productId}
         tagId={formData.packageId}
         brand={formData.brand}
+        market={formData.market}
         onRemove={() => {}}
       />
 
@@ -792,12 +937,14 @@ export default function LabelWizard({ isOpen, onClose, packages }: LabelWizardPr
       )}
 
       <div>
-        <label style={labelStyle}>Packaged date</label>
+        <label htmlFor="packaged-date" style={labelStyle}>Packaged date</label>
         <div style={{ display: 'flex', gap: spacing.xs }}>
           <div style={{ position: 'relative', flex: 1 }}>
             <input
+              id="packaged-date"
               type="date"
-              style={{ ...inputStyle, paddingLeft: spacing['2xl'] }}
+              className="hide-date-icon"
+              style={{ ...inputStyle, paddingLeft: spacing.sm, paddingRight: spacing['2xl'] }}
               value={formData.packagedDate}
               onChange={(e) => setFormData({ ...formData, packagedDate: e.target.value })}
             />
@@ -805,7 +952,7 @@ export default function LabelWizard({ isOpen, onClose, packages }: LabelWizardPr
               size={16}
               style={{
                 position: 'absolute',
-                left: spacing.sm,
+                right: spacing.sm,
                 top: '50%',
                 transform: 'translateY(-50%)',
                 color: colors.icon.enabled.onLight,
@@ -828,8 +975,9 @@ export default function LabelWizard({ isOpen, onClose, packages }: LabelWizardPr
     // Step 1: Label template
     <div key="template" style={{ display: 'flex', flexDirection: 'column', gap: spacing.md, width: '100%', minWidth: 0 }}>
       <div>
-        <label style={labelStyle}>Template</label>
+        <label htmlFor="lbl-template" style={labelStyle}>Template</label>
         <select
+          id="lbl-template"
           style={inputStyle}
           value={formData.template}
           onChange={(e) => setFormData({ ...formData, template: e.target.value, layout: '' })}
@@ -858,8 +1006,9 @@ export default function LabelWizard({ isOpen, onClose, packages }: LabelWizardPr
       </div>
       {formData.template && (
         <div>
-          <label style={labelStyle}>Layout</label>
+          <label htmlFor="lbl-layout" style={labelStyle}>Layout</label>
           <select
+            id="lbl-layout"
             style={inputStyle}
             value={formData.layout}
             onChange={(e) => setFormData({ ...formData, layout: e.target.value })}
@@ -873,16 +1022,16 @@ export default function LabelWizard({ isOpen, onClose, packages }: LabelWizardPr
       )}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: spacing.md }}>
         <div>
-          <label style={labelStyle}>Top offset (in)</label>
-          <input type="number" step="0.01" style={inputStyle} placeholder="0.00" value={formData.topOffset} onChange={(e) => setFormData({ ...formData, topOffset: e.target.value })} />
+          <label htmlFor="lbl-top-offset" style={labelStyle}>Top offset (in)</label>
+          <input id="lbl-top-offset" type="number" step="0.01" style={inputStyle} placeholder="0.00" value={formData.topOffset} onChange={(e) => setFormData({ ...formData, topOffset: e.target.value })} />
         </div>
         <div>
-          <label style={labelStyle}>Left offset (in)</label>
-          <input type="number" step="0.01" style={inputStyle} placeholder="0.00" value={formData.leftOffset} onChange={(e) => setFormData({ ...formData, leftOffset: e.target.value })} />
+          <label htmlFor="lbl-left-offset" style={labelStyle}>Left offset (in)</label>
+          <input id="lbl-left-offset" type="number" step="0.01" style={inputStyle} placeholder="0.00" value={formData.leftOffset} onChange={(e) => setFormData({ ...formData, leftOffset: e.target.value })} />
         </div>
         <div>
-          <label style={labelStyle}>Rotate (°)</label>
-          <select style={inputStyle} value={formData.rotation} onChange={(e) => setFormData({ ...formData, rotation: e.target.value })}>
+          <label htmlFor="lbl-rotate" style={labelStyle}>Rotate (°)</label>
+          <select id="lbl-rotate" style={inputStyle} value={formData.rotation} onChange={(e) => setFormData({ ...formData, rotation: e.target.value })}>
             <option value="0">0°</option>
             <option value="90">90°</option>
             <option value="180">180°</option>
@@ -890,53 +1039,22 @@ export default function LabelWizard({ isOpen, onClose, packages }: LabelWizardPr
           </select>
         </div>
       </div>
-      <StepNav step={1} total={steps.length} onNext={handleNext} onPrev={handlePrev} />
+      <StepNav step={1} total={steps.length} onNext={handleNext} onPrev={handlePrev} nextDisabled={!formData.template} />
     </div>,
 
-    // Step 2: Label quantity
-    <div key="quantity" style={{ display: 'flex', flexDirection: 'column', gap: spacing.md, width: '100%', minWidth: 0 }}>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: spacing.md }}>
-        <div>
-          <label style={labelStyle}>Total quantity</label>
-          <input type="number" style={inputStyle} placeholder="Enter quantity" value={formData.quantity} onChange={(e) => setFormData({ ...formData, quantity: e.target.value })} />
-        </div>
-        <div>
-          <label style={labelStyle}>Labels per reel</label>
-          <input type="number" style={inputStyle} placeholder="e.g. 500" value={formData.perReel} onChange={(e) => setFormData({ ...formData, perReel: e.target.value })} />
-        </div>
-      </div>
-      <div>
-        <label style={labelStyle}>Reels needed</label>
-        <div
-          style={{
-            ...inputStyle,
-            backgroundColor: colors.surface.lightDarker,
-            display: 'flex',
-            alignItems: 'center',
-            color: (formData.quantity && formData.perReel) ? colors.text.highEmphasis.onLight : colors.text.lowEmphasis.onLight,
-          }}
-        >
-          {formData.quantity && formData.perReel
-            ? Math.ceil(parseInt(formData.quantity) / parseInt(formData.perReel))
-            : '—'}
-        </div>
-      </div>
-      <StepNav step={2} total={steps.length} onNext={handleNext} onPrev={handlePrev} />
-    </div>,
-
-    // Step 3: Print job settings
+    // Step 2: Print job settings
     <div key="settings" style={{ display: 'flex', flexDirection: 'column', gap: spacing.md, width: '100%', minWidth: 0 }}>
       <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: spacing.md }}>
         <div>
-          <label style={labelStyle}>Job name</label>
-          <input type="text" style={{ ...inputStyle, width: '100%', minWidth: 0 }} value={formData.jobName} onChange={(e) => setFormData({ ...formData, jobName: e.target.value })} />
+          <label htmlFor="lbl-job-name" style={labelStyle}>Job name</label>
+          <input id="lbl-job-name" type="text" style={{ ...inputStyle, width: '100%', minWidth: 0 }} value={formData.jobName} onChange={(e) => setFormData({ ...formData, jobName: e.target.value })} />
         </div>
         <div>
-          <label style={labelStyle}>Scheduled date</label>
-          <input type="date" style={{ ...inputStyle, width: '100%', minWidth: 0 }} defaultValue={new Date().toISOString().split('T')[0]} />
+          <label htmlFor="lbl-sched-date" style={labelStyle}>Scheduled date</label>
+          <input id="lbl-sched-date" type="date" style={{ ...inputStyle, width: '100%', minWidth: 0 }} defaultValue={new Date().toISOString().split('T')[0]} />
         </div>
       </div>
-      <StepNav step={3} total={steps.length} onNext={handleNext} onPrev={handlePrev} lastLabel="Finish" />
+      <StepNav step={2} total={steps.length} onNext={handleNext} onPrev={handlePrev} lastLabel="Save" loading={isSaving} nextDisabled={!formData.jobName.trim()} />
     </div>,
   ]
 
@@ -944,26 +1062,130 @@ export default function LabelWizard({ isOpen, onClose, packages }: LabelWizardPr
     <FullScreenModal
       open={isOpen}
       onClose={onClose}
-      title="New print job"
+      title={isSaved ? formData.jobName : 'New print job'}
+      subtitle={isSaved ? 'Saved' : undefined}
       columns={3}
+      className="rid-modal-root"
       headerButtons={[
-        { label: 'Save', emphasis: 'low', onClick: () => {} },
-        { label: 'Print now', emphasis: 'high', onClick: () => {}, disabled: currentStep < steps.length - 1 },
+        ...(isSaved ? [
+          { label: (<span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>Download <ChevronDown size={14} /></span>) as unknown as string, emphasis: 'high' as const, onClick: () => setDownloadMenuOpen((v) => !v), disabled: !formData.quantity || !formData.perReel || parseInt(formData.quantity) <= 0 || parseInt(formData.perReel) <= 0 },
+        ] : []),
       ]}
     >
-      {/* Left panel: Wizard */}
+      {/* Download dropdown menu */}
+      {downloadMenuOpen && (
+        <div
+          ref={downloadMenuRef}
+          style={{
+            position: 'fixed',
+            top: '52px',
+            right: spacing.lg,
+            zIndex: 9999,
+            backgroundColor: isDark ? dark.bgSurface : colors.surface.light,
+            border: `1px solid ${isDark ? dark.border : colors.border.lowEmphasis.onLight}`,
+            borderRadius: borderRadius.md,
+            boxShadow: shadows.lg,
+            minWidth: '200px',
+            overflow: 'hidden',
+          }}
+        >
+          {[
+            { label: 'Download PDF' },
+            { label: 'Download CSV' },
+          ].map((item, idx) => (
+            <button
+              key={idx}
+              type="button"
+              onClick={() => setDownloadMenuOpen(false)}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                width: '100%',
+                padding: `${spacing.sm} ${spacing.md}`,
+                border: 'none',
+                backgroundColor: 'transparent',
+                cursor: 'pointer',
+                ...typography.body.sm,
+                color: isDark ? dark.text : colors.text.highEmphasis.onLight,
+                textAlign: 'left',
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = isDark ? dark.bgHover : colors.hover.onLight }}
+              onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent' }}
+            >
+              {item.label}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Left panel: Wizard + Quantity */}
       <FullScreenModalPanel
         sticky
-        className="col-span-1 h-[calc(100vh-64px)] !p-0 [&>div]:!p-0 [&>div]:!overflow-x-clip !min-w-0"
+        background="muted"
+        className="col-span-1 h-[calc(100vh-64px)] !p-0 [&>div]:!p-0 [&>div]:!overflow-x-clip !min-w-[360px]"
       >
-        <div style={{ width: '100%', padding: `${spacing.xs} ${spacing.xl}`, boxSizing: 'border-box', minWidth: 0 }}>
-          <LinearStepper
-            steps={steps}
-            activeStep={currentStep}
-            onStepChange={setCurrentStep}
-            stepContent={stepContent}
-            clickable
-          />
+        <div style={{ width: '100%', padding: `${spacing.xs} ${spacing['2xl']}`, boxSizing: 'border-box', minWidth: 0, backgroundColor: isDark ? dark.bgSidebar : colors.surface.lightDarker, display: 'flex', flexDirection: 'column', height: '100%', overflowY: 'auto' }}>
+          <h2
+            id="label-config-heading"
+            style={{
+              ...typography.heading.h6,
+              color: isDark ? dark.text : colors.text.highEmphasis.onLight,
+              margin: `${spacing.md} 0 ${spacing.xs}`,
+            }}
+          >
+            Label configuration
+          </h2>
+          <nav aria-labelledby="label-config-heading" className="rid-stepper-root">
+            <LinearStepper
+              steps={steps}
+              activeStep={isSaved ? (savedExpandedStep ?? steps.length) : currentStep}
+              onStepChange={isSaved
+                ? (idx: number) => setSavedExpandedStep(prev => prev === idx ? null : idx)
+                : setCurrentStep
+              }
+              stepContent={stepContent}
+              clickable
+            />
+          </nav>
+
+          {isSaved && (
+            <section aria-label="Label quantity" style={{ marginTop: spacing.lg, padding: `${spacing.md} 0` }}>
+              <h2 style={{ ...typography.heading.h6, color: isDark ? dark.text : colors.text.highEmphasis.onLight, margin: `0 0 ${spacing.xs}` }}>
+                Label quantity
+              </h2>
+              <p style={{ ...typography.body.xs, color: isDark ? dark.textMuted : colors.text.lowEmphasis.onLight, margin: `0 0 ${spacing.md}` }}>
+                Adjust print counts anytime
+              </p>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: spacing.md }}>
+                <div>
+                  <label htmlFor="qty-total" style={labelStyle}>Total quantity</label>
+                  <input id="qty-total" type="number" min="1" style={inputStyle} placeholder="Enter quantity" value={formData.quantity} onChange={(e) => setFormData({ ...formData, quantity: e.target.value })} />
+                </div>
+                <div>
+                  <label htmlFor="qty-per-reel" style={labelStyle}>Labels per reel</label>
+                  <input id="qty-per-reel" type="number" min="1" style={inputStyle} placeholder="e.g. 500" value={formData.perReel} onChange={(e) => setFormData({ ...formData, perReel: e.target.value })} />
+                </div>
+                <div>
+                  <label id="reels-needed-label" style={labelStyle}>Reels needed</label>
+                  <div
+                    role="status"
+                    aria-labelledby="reels-needed-label"
+                    style={{
+                      ...inputStyle,
+                      backgroundColor: isDark ? colors.surface.disabled.onDark : colors.surface.lightDarker,
+                      display: 'flex',
+                      alignItems: 'center',
+                      color: (formData.quantity && formData.perReel) ? (isDark ? dark.text : colors.text.highEmphasis.onLight) : (isDark ? dark.textMuted : colors.text.lowEmphasis.onLight),
+                    }}
+                  >
+                    {formData.quantity && formData.perReel && parseInt(formData.perReel) > 0 && parseInt(formData.quantity) > 0
+                      ? Math.ceil(parseInt(formData.quantity) / parseInt(formData.perReel))
+                      : '—'}
+                  </div>
+                </div>
+              </div>
+            </section>
+          )}
         </div>
       </FullScreenModalPanel>
 
@@ -974,7 +1196,10 @@ export default function LabelWizard({ isOpen, onClose, packages }: LabelWizardPr
         sticky
         className="col-span-2 h-[calc(100vh-64px)] !p-0"
       >
-        <div 
+        <div
+          role="region"
+          aria-label="Label print preview"
+          aria-live="polite"
           style={{ 
             display: 'flex', 
             flexDirection: 'column', 

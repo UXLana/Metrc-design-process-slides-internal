@@ -80,6 +80,7 @@ function NavItemButton({
         backgroundColor: getBg(),
         color: getTextColor(),
         border: 'none',
+        borderRadius: borderRadius.sm,
         cursor: 'pointer',
         transition: `all ${transitionPresets.default}`,
         outline: 'none',
@@ -95,7 +96,7 @@ function NavItemButton({
           width: '40px',
           height: '40px',
           borderRadius: borderRadius.lg,
-          backgroundColor: isActive ? (isDark ? colors.brand.default : colors.brand.darker) : 'transparent',
+          backgroundColor: isActive ? (isDark ? '#5AAE90' : colors.brand.darker) : 'transparent',
           color: isActive ? '#fff' : getIconColor(),
           transition: `all ${transitionPresets.default}`,
         }}
@@ -123,7 +124,7 @@ export default function Sidebar() {
 
   const mainItems: NavItem[] = [
     { id: 'products', label: 'Products', href: '/products', icon: <Tag size={22} /> },
-    { id: 'packages', label: 'Package', href: '/', icon: <Package size={22} /> },
+    { id: 'packages', label: 'Packages', href: '/', icon: <Package size={22} /> },
     { id: 'templates', label: 'Templates', href: '/templates', icon: <LayoutTemplate size={22} /> },
     { id: 'print-jobs', label: 'Print Jobs', href: '/print-jobs', icon: <Printer size={22} /> },
   ]
@@ -143,10 +144,12 @@ export default function Sidebar() {
         width: sidebar.collapsedWidth,
         height: '100%',
         backgroundColor: isDark ? dark.bgSidebar : colors.surface.light,
-        borderRight: 'none',
+        borderRight: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : 'none',
         flexShrink: 0,
         overflow: 'hidden',
         transition: 'background-color 0.2s ease',
+        padding: `0 ${spacing.xs}`,
+        boxSizing: 'content-box',
       }}
     >
       {/* Main Navigation */}
@@ -158,6 +161,7 @@ export default function Sidebar() {
           paddingTop: spacing.md,
           overflowY: 'auto',
           overflowX: 'hidden',
+          gap: spacing.xs,
         }}
       >
         {mainItems.map((item) => (
@@ -175,6 +179,9 @@ export default function Sidebar() {
       <div
         style={{
           marginTop: 'auto',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: spacing.xs,
         }}
       >
         {/* Dark mode toggle */}

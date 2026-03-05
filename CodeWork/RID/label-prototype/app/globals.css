@@ -160,8 +160,8 @@
   --mtr-hover-onLight: rgba(33, 63, 57, 0.05);
   --mtr-hover-onDark: rgba(255, 255, 255, 0.15);
   --mtr-selected-onLight: rgba(33, 63, 57, 0.09);
-  --mtr-selectedHighlight: rgba(212, 149, 88, 0.12);
-  --mtr-selectedHighlight_hover: rgba(212, 149, 88, 0.20);
+  --mtr-selectedHighlight: #DCE8E5;
+  --mtr-selectedHighlight_hover: #C5D8D4;
   --mtr-focusBorder-onLight: #007E8A;
   --mtr-focusBorder-onDark: rgba(255, 255, 255, 0.65);
   --mtr-scrim: rgba(33, 63, 57, 0.34);
@@ -322,6 +322,12 @@ p code {
   font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace !important;
 }
 
+/* Hide native date picker icon */
+.hide-date-icon::-webkit-calendar-picker-indicator {
+  display: none !important;
+  -webkit-appearance: none;
+}
+
 /* =============================================================================
    DataTable checkbox — match DS Checkbox component (18px, 1.5px border, 2px radius)
    ============================================================================= */
@@ -403,9 +409,13 @@ input[type="checkbox"]:focus-visible {
 
 .dark-table th,
 .dark-table thead th {
-  background-color: var(--mtr-surface-light) !important;
-  color: #858585 !important;
+  background-color: #252526 !important;
+  color: #FFFFFF !important;
   border-bottom-color: #3c3c3c !important;
+}
+
+.dark-table tbody tr {
+  background-color: #1e1e1e !important;
 }
 
 .dark-table tbody tr:hover,
@@ -424,8 +434,8 @@ input[type="checkbox"]:focus-visible {
 
 .dark-table input[type="checkbox"]:checked,
 .dark-table input[type="checkbox"]:indeterminate {
-  background-color: var(--mtr-brand-default) !important;
-  border-color: var(--mtr-brand-default) !important;
+  background-color: #5AAE90 !important;
+  border-color: #5AAE90 !important;
 }
 
 .dark-table button {
@@ -446,48 +456,213 @@ input[type="checkbox"]:focus-visible {
   color: #858585 !important;
 }
 
-/* Override DS CSS variables for neutral dark theme */
+/* Toolbar dark mode — target the DS Toolbar container */
+[data-dark="true"] .mtr-toolbar > div {
+  background-color: #2D2D2D !important;
+  border-color: #3E3E3E !important;
+}
+
+[data-dark="true"] .mtr-toolbar > div span,
+[data-dark="true"] .mtr-toolbar > div button {
+  color: #FFFFFF !important;
+}
+
+[data-dark="true"] .mtr-toolbar > div svg {
+  color: #D1D1D1 !important;
+}
+
+/* Input in dark toolbar */
+[data-dark="true"] .mtr-toolbar input {
+  background-color: transparent !important;
+  color: #FFFFFF !important;
+  border-color: #3E3E3E !important;
+}
+
+/* Remove extra backgrounds from inner containers (SelectionInfo, etc) */
+[data-dark="true"] .mtr-toolbar > div > div,
+[data-dark="true"] .mtr-toolbar > div > div > div,
+[data-dark="true"] .mtr-toolbar > div > div > span {
+  background-color: transparent !important;
+}
+
+/* DS Tabs in dark mode */
+[data-dark="true"] button[role="tab"] {
+  color: #D1D1D1 !important;
+}
+
+[data-dark="true"] button[role="tab"][aria-selected="true"] {
+  color: #FFFFFF !important;
+  border-bottom-color: #4ADE80 !important;
+  opacity: 1 !important;
+}
+
+/* Override DS CSS variables for neutral dark theme (Teams-like) */
 [data-dark="true"] {
-  --mtr-surface-dark: #2d2d2d;
-  --mtr-surface-darkDarker: #1e1e1e;
-  --mtr-surface-light: #1e1e1e;
-  --mtr-surface-lightDarker: #181818;
-  --mtr-hover-onDark: rgba(255,255,255,0.06);
-  --mtr-selected-onLight: rgba(255,255,255,0.09);
-  --color-neutral-0: #1e1e1e;
-  --color-neutral-50: #1e1e1e;
-  --color-neutral-100: #252526;
-  --color-neutral-200: #2d2d2d;
-  --color-neutral-300: #3c3c3c;
-  --color-neutral-400: #555;
-  --color-neutral-500: #6e6e6e;
-  --color-text-high-emphasis: #cccccc;
+  --mtr-surface-dark: #2D2D2D;
+  --mtr-surface-darkDarker: #1F1F1F;
+  --mtr-surface-light: #1F1F1F;
+  --mtr-surface-lightDarker: #1B1B1B;
+  --mtr-surface-success: rgba(90, 174, 144, 0.2);
+  --mtr-surface-info: rgba(110, 97, 255, 0.2);
+  --mtr-surface-important: rgba(220, 12, 34, 0.2);
+  --mtr-surface-warning: rgba(209, 118, 0, 0.2);
+  --mtr-hover-onLight: #3B3B3B;
+  --mtr-hover-onDark: #3B3B3B;
+  --mtr-selected-onLight: #3B3B3B;
+  --mtr-brand-default: #5AAE90;
+  --mtr-brand-lighter: #5AAE90;
+  --mtr-text-action-enabled: #5AAE90;
+  --mtr-text-highEmphasis-onLight: #FFFFFF;
+  --mtr-text-lowEmphasis-onLight: #D1D1D1;
+  --mtr-text-success: #5AAE90;
+  --mtr-text-warning: #E89D3E;
+  --mtr-text-important: #F06E7A;
+  --mtr-border-lowEmphasis-onLight: #3E3E3E;
+  --mtr-border-midEmphasis-onLight: #484848;
+  --mtr-icon-enabled-onLight: #D1D1D1;
+  --color-neutral-0: #1F1F1F;
+  --color-neutral-50: #1F1F1F;
+  --color-neutral-100: #292929;
+  --color-neutral-200: #2D2D2D;
+  --color-neutral-300: #3E3E3E;
+  --color-neutral-400: #484848;
+  --color-neutral-500: #A1A1A1;
+  --color-text-high-emphasis: #FFFFFF;
 }
 
 [data-dark="true"] body {
-  background-color: #1e1e1e !important;
-  color: #cccccc !important;
+  background-color: #1F1F1F !important;
+  color: #FFFFFF !important;
 }
 
 [data-dark="true"] main {
-  background-color: #1e1e1e !important;
+  background-color: #1F1F1F !important;
 }
 
 /* Ensure all top-level containers go dark */
 [data-dark="true"] body > div {
-  background-color: #1e1e1e !important;
-  color: #cccccc !important;
+  background-color: #1F1F1F !important;
+  color: #FFFFFF !important;
+}
+
+/* DS Buttons in dark mode — RID Green */
+[data-dark="true"] button[style*="background-color"] {
+  --mtr-brand-default: #5AAE90;
+  --mtr-brand-darker: #4A9A7E;
+}
+
+/* DS toolbar icon button hover */
+.mtr-toolbar button[type="button"]:not(:disabled):hover {
+  background-color: var(--mtr-hover-onLight) !important;
+  color: var(--mtr-text-highEmphasis-onLight) !important;
+}
+
+[data-dark="true"] .mtr-toolbar button[type="button"]:not(:disabled):hover {
+  background-color: #3B3B3B !important;
+  color: #FFFFFF !important;
+}
+
+/* Default (Light Mode) - Copper */
+.copper-highlight {
+  --mtr-selectedHighlight: rgba(212, 149, 88, 0.12);
+  --mtr-selectedHighlight_hover: rgba(212, 149, 88, 0.20);
+}
+
+/* Dark Mode - Green */
+[data-dark="true"] .copper-highlight {
+  --mtr-selectedHighlight: rgba(90, 174, 144, 0.15);
+  --mtr-selectedHighlight_hover: rgba(90, 174, 144, 0.25);
+}
+
+/* =============================================================================
+   Dark mode Badge overrides (subtle variant)
+   Higher specificity to beat .dark-table span { color: inherit }
+   ============================================================================= */
+
+.dark-badge.dark-badge-success {
+  background-color: rgba(90, 174, 144, 0.20) !important;
+  color: #5AAE90 !important;
+  border-color: transparent !important;
+}
+
+.dark-badge.dark-badge-warning {
+  background-color: rgba(232, 157, 62, 0.20) !important;
+  color: #E89D3E !important;
+  border-color: transparent !important;
+}
+
+.dark-badge.dark-badge-error {
+  background-color: rgba(240, 110, 122, 0.20) !important;
+  color: #F06E7A !important;
+  border-color: transparent !important;
+}
+
+.dark-badge.dark-badge-info {
+  background-color: rgba(91, 155, 213, 0.20) !important;
+  color: #6BA3D6 !important;
+  border-color: transparent !important;
+}
+
+.dark-badge.dark-badge-neutral {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  color: #A1A1A1 !important;
+  border-color: transparent !important;
+}
+
+.dark-badge.dark-badge-brand {
+  background-color: rgba(90, 174, 144, 0.20) !important;
+  color: #5AAE90 !important;
+  border-color: transparent !important;
+}
+
+/* =============================================================================
+   Dark mode Stepper overrides (LinearStepper in .rid-stepper-root)
+   The DS stepper uses hardcoded inline styles. These rules reference theme CSS
+   variables so they auto-update when the theme object swaps.
+   ============================================================================= */
+
+/* All step labels & metadata → muted by default */
+[data-dark="true"] .rid-stepper-root p {
+  color: var(--mtr-text-lowEmphasis-onLight) !important;
+}
+
+/* Active step label → full brightness */
+[data-dark="true"] .rid-stepper-root [aria-current="step"] p:first-of-type {
+  color: var(--mtr-text-highEmphasis-onLight) !important;
+}
+
+/* Completed step label → slightly brighter than metadata */
+[data-dark="true"] .rid-stepper-root [role="button"]:not([aria-current="step"]) p:first-of-type {
+  color: var(--mtr-text-highEmphasis-onLight) !important;
+  opacity: 0.85;
+}
+
+/* Pending step circles — dark bg instead of white */
+[data-dark="true"] .rid-stepper-root li > div:not([aria-current="step"]) div[aria-hidden="true"]:has(> span) {
+  background-color: var(--mtr-surface-dark) !important;
+  border-color: var(--mtr-border-midEmphasis-onLight) !important;
+}
+
+/* Pending step number text — muted */
+[data-dark="true"] .rid-stepper-root li > div:not([aria-current="step"]) div[aria-hidden="true"] > span {
+  color: var(--mtr-text-lowEmphasis-onLight) !important;
+}
+
+/* Connector lines — visible on dark bg */
+[data-dark="true"] .rid-stepper-root ol div[aria-hidden="true"]:empty {
+  background-color: var(--mtr-border-lowEmphasis-onLight) !important;
 }
 
 /* Dark scrollbar in dark mode */
 [data-dark="true"] ::-webkit-scrollbar-track {
-  background: #252526;
+  background: #1F1F1F;
 }
 
 [data-dark="true"] ::-webkit-scrollbar-thumb {
-  background: #555;
+  background: #484848;
 }
 
 [data-dark="true"] ::-webkit-scrollbar-thumb:hover {
-  background: #6e6e6e;
+  background: #606060;
 }
+
