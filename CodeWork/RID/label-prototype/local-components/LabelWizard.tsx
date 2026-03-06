@@ -1263,7 +1263,6 @@ export default function LabelWizard({ isOpen, onClose, packages, initialSaved = 
               <ToolbarBtn><Undo size={14} /></ToolbarBtn>
               <ToolbarBtn><Redo size={14} /></ToolbarBtn>
               <ToolbarBtn><Maximize size={14} /></ToolbarBtn>
-              <ToolbarBtn><Download size={14} /></ToolbarBtn>
             </div>
           </div>
 

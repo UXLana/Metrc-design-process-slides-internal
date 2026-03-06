@@ -134,13 +134,13 @@ export default function PackagesPage() {
     },
     {
       key: 'product',
-      header: 'Product',
+      header: 'Package',
       width: '25%',
       sortable: true,
       cardPrimary: true,
       render: (row: any) => (
         <Link
-          href={`/products/${row.id}`}
+          href={`/packages/${row.id}`}
           onClick={(e) => e.stopPropagation()}
           style={{
             fontFamily: fontFamilies.body,
