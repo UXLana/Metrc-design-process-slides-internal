@@ -1,7 +1,7 @@
 /**
- * Microsoft Dark Theme
+ * RID Dark Theme
  *
- * A "Microsoft Teams"-inspired neutral dark palette.
+ * Neutral dark palette for the RID product.
  * Brand accent: #5AAE90 (bright green) for buttons, active states, links.
  * Surfaces: neutral grays (#1B1B1B → #1F1F1F → #2D2D2D → #3B3B3B)
  *
@@ -13,9 +13,9 @@
 import type { ProductTheme } from '@/styles/themes/theme-interface'
 import { ridTheme } from '@/styles/themes'
 
-export const microsoftDarkTheme: ProductTheme = {
+export const ridDarkTheme: ProductTheme = {
   ...ridTheme,
-  name: 'Microsoft-Dark',
+  name: 'RID-Dark',
   colors: {
     brand: {
       default: '#5AAE90',

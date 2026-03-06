@@ -3,7 +3,7 @@
 import { createContext, useContext, useEffect, useLayoutEffect, useState, useCallback, useMemo } from 'react'
 import { ThemeProvider, ridTheme } from '@/styles/themes'
 import { applyAllThemeVars } from '@/styles/themes/css-vars'
-import { microsoftDarkTheme } from './microsoft-dark-theme'
+import { ridDarkTheme } from './rid-dark-theme'
 
 // =============================================================================
 // DARK PALETTE (Teams-like) — used by local components for inline styles
@@ -58,7 +58,7 @@ function DarkModeProvider({ children }: { children: React.ReactNode }) {
   const toggle = useCallback(() => setIsDark((v) => !v), [])
   const value = useMemo(() => ({ isDark, toggle }), [isDark, toggle])
 
-  const activeTheme = isDark ? microsoftDarkTheme : ridTheme
+  const activeTheme = isDark ? ridDarkTheme : ridTheme
 
   useLayoutEffect(() => {
     applyAllThemeVars(activeTheme, document.documentElement)
